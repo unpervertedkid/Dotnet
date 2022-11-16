@@ -1,15 +1,21 @@
-﻿var salesFiles = FindFiles("stores");
+﻿var currentDirectory = Directory.GetCurrentDirectory();
+var storesDirectory = Path.Combine(currentDirectory,"stores");
 
-foreach(var file in salesFiles){
-    Console.WriteLine(file);
-}
+var salesTotalDirectory = Path.Combine(currentDirectory,"salesTotalDir");
+Directory.CreateDirectory(salesTotalDirectory);
+
+var salesFiles = FindFiles(storesDirectory);
+
+File.WriteAllText(Path.Combine(salesTotalDirectory, "totals.txt"), String.Empty);
+
 IEnumerable<string> FindFiles(string folderName){
     List<string> salesFiles = new List<string>();
 
     var foundFiles = Directory.EnumerateFiles(folderName, "*",SearchOption.AllDirectories);
 
     foreach(var file in foundFiles){
-        if(file.EndsWith("sales.json")){
+        var extension = Path.GetExtension(file);
+        if(extension == ".json"){
             salesFiles.Add(file);
         }
     }
